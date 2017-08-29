@@ -9,7 +9,7 @@ import java.io.File;
  * Not allowed to copy without permission.
  * ***********************************************
  */
-public class MachineLearning {
+class MachineLearning {
 	private FileType fileType = new FileType();
 	int learnCount = 0;
 	
@@ -18,9 +18,17 @@ public class MachineLearning {
 		String res = "\n";
 		String[] temp = file.getName().split("\\.");
 		String extName = temp[temp.length - 1].toLowerCase();
+		if (extName.length() > 20)
+			return "\n无特征文本文件";
+		for (String s : Config.MLIgnoreThpe) {
+			if (s.equals(extName)) {
+				return "\n无特征文本文件";
+			}
+		}
 		String fileCode = fileType.getFileCode(file.getAbsolutePath());
 		res += fileCode + " = " + extName;
-		if (!extName.equals(fileType.getFileType(file.getAbsolutePath()))) {
+		String getType = fileType.getFileType(file.getAbsolutePath());
+		if (getType == null || !getType.contains(extName)) {
 			boolean getNewItem = addItemToMap(fileCode, extName);
 			res += getNewItem ? "  --> 学习成功" : "";
 			learnCount += getNewItem ? 1 : 0;

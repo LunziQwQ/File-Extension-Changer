@@ -10,10 +10,10 @@ import java.util.*;
  * Not allowed to copy without permission.
  * ***********************************************
  */
-public class FileType {
-	static Map<String, String> fileTypeMap = new HashMap<String, String>();
+class FileType {
+	static Map<String, String> fileTypeMap = new HashMap<>();
 	
-	void loadFileTypeMap() throws FileNotFoundException, IOException {
+	void loadFileTypeMap() throws IOException {
 		File file = new File(Config.FILE_TYPE_DATA_PATH);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String temp;
@@ -26,9 +26,8 @@ public class FileType {
 	void saveFileTypeMap() throws IOException {
 		File file = new File(Config.FILE_TYPE_DATA_PATH);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		Iterator iterator = sortFileTypeMap().iterator();
-		while (iterator.hasNext()) {
-			bw.write(iterator.next() + "\n");
+		for (Object o : sortFileTypeMap()) {
+			bw.write(o + "\n");
 		}
 		bw.close();
 	}
@@ -63,7 +62,7 @@ public class FileType {
 	}
 	
 	String getFileCode(String filePath) {
-		String fileCode = null;
+		String fileCode;
 		try {
 			FileInputStream is = new FileInputStream(filePath);
 			byte[] b = new byte[10];
@@ -72,6 +71,7 @@ public class FileType {
 			is.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		return fileCode;
 	}
@@ -79,9 +79,7 @@ public class FileType {
 	String getFileType(String filePath) {
 		String res = null;
 		String fileCode = getFileCode(filePath);
-		Iterator<String> keyIter = fileTypeMap.keySet().iterator();
-		while (keyIter.hasNext()) {
-			String key = keyIter.next();
+		for (String key : fileTypeMap.keySet()) {
 			if (key.toLowerCase().startsWith(fileCode.toLowerCase()) ||
 					fileCode.toLowerCase().startsWith(key.toLowerCase())) {
 				res = fileTypeMap.get(key);
@@ -93,10 +91,8 @@ public class FileType {
 	
 	int getTypeCount(String type) {
 		int count = 0;
-		Iterator<String> valueIter = fileTypeMap.values().iterator();
-		while (valueIter.hasNext()) {
-			String temp = valueIter.next();
-			if(temp.equals(type)) count++;
+		for (String temp : fileTypeMap.values()) {
+			if (temp.equals(type)) count++;
 		}
 		return count;
 	}

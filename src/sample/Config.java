@@ -7,6 +7,8 @@ package sample;
  * Not allowed to copy without permission.
  * ***********************************************
  */
-public class Config {
-	public static String FILE_TYPE_DATA_PATH = "extNameData.txt";
+class Config {
+	static String FILE_TYPE_DATA_PATH = "extNameData.txt";
+	static final String[] MLIgnoreThpe =
+			{"txt", "bat", "cfg", "css", "conf", "data", "license", "info", "ini", "log", "png", "sys"};
 }

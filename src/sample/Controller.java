@@ -72,10 +72,6 @@ public class Controller {
 				fileList.addAll(dfsLearn(item));
 			}
 		} else {
-			try {
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			fileCount++;
 			console.appendText(ml.learnFile(file));
 		}
@@ -117,10 +113,7 @@ public class Controller {
 	public void initialize(){
 		console.textProperty().addListener(
 				(ChangeListener<Object>) (observableValue, oldValue, newValue)
-						-> {
-					console.setScrollTop(Double.MAX_VALUE);
-				}
-		);
+						-> console.setScrollTop(Double.MAX_VALUE));
 		
 		console.appendText("Welcome to FileTypeGetter\n" +
 				"Made by Lunzi 2017.8\n\n" +
