@@ -61,6 +61,7 @@ public class Controller {
 			fileType.loadFileTypeMap();
 		} catch (IOException ioe) {
 			console.appendText("\n文件类型数据存储失败");
+			ioe.printStackTrace();
 		}
 	}
 	

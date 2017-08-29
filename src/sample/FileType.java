@@ -41,6 +41,7 @@ class FileType {
 	String printFileTypeMap() {
 		StringBuilder sb = new StringBuilder();
 		sortFileTypeMap().forEach(item -> sb.append(item).append("\n"));
+		System.out.println(sb.toString());
 		return sb.toString();
 	}
 	
@@ -86,6 +87,7 @@ class FileType {
 				break;
 			}
 		}
+		System.out.println(fileCode + "=" + res);
 		return res != null ? res.toLowerCase() : null;
 	}
 	
