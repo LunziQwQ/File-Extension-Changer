@@ -93,7 +93,9 @@ public class Controller {
 	@FXML
 	private void printMap() {
 		console.setText(fileType.printFileTypeMap());
-		console.appendText(" ");
+		console.appendText("========================\n" +
+				"文件特征库共计 " + FileType.fileTypeMap.size() + " 条特征\n"
+		);
 	}
 	
 	@FXML
