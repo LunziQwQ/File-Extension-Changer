@@ -13,7 +13,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("MainForm.fxml"));
         primaryStage.setTitle("File Type Getter");
         primaryStage.setScene(new Scene(root, 600, 350));
-        primaryStage.show();
+	    primaryStage.setResizable(false);   //禁止用户更改窗口大小
+	    primaryStage.show();
     }
     
     public static void main(String[] args) {

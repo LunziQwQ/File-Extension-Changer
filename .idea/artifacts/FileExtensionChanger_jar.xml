@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="FileExtensionChanger:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/FileExtensionChanger_jar</output-path>
-    <root id="archive" name="FileExtensionChanger.jar">
-      <element id="module-output" name="FileExtensionChanger" />
-    </root>
-  </artifact>
-</component>

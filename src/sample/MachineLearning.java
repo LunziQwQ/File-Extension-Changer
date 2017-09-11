@@ -13,7 +13,11 @@ class MachineLearning {
 	private FileType fileType = new FileType();
 	int learnCount = 0;
 	
-	
+	/**
+	 * 通过检查本地已知后缀文件进行特征库补充
+	 * @param file 检查的文件实例
+	 * @return 该文件的特征字符串+学习结果
+	 */
 	String learnFile(File file) {
 		String res = "\n";
 		String[] temp = file.getName().split("\\.");

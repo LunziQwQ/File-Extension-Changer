@@ -11,8 +11,13 @@ import java.util.*;
  * ***********************************************
  */
 class FileType {
+	//文件类型特征库
 	static Map<String, String> fileTypeMap = new HashMap<>();
 	
+	/**
+	 * 从附带的数据文件加载文件特征库
+	 * @throws IOException
+	 */
 	void loadFileTypeMap() throws IOException {
 		File file = new File(Config.FILE_TYPE_DATA_PATH);
 		BufferedReader br = new BufferedReader(new FileReader(file));
@@ -23,21 +28,33 @@ class FileType {
 		br.close();
 	}
 	
+	/**
+	 * 将当前的文件特征库保存至文件
+	 * @throws IOException
+	 */
 	void saveFileTypeMap() throws IOException {
 		File file = new File(Config.FILE_TYPE_DATA_PATH);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		for (Object o : sortFileTypeMap()) {
 			bw.write(o + "\n");
 		}
-		bw.close();
+		bw.close();         //关闭流防止后续文件操作占用
 	}
 	
+	/**
+	 * 将Map转为List并排序
+	 * @return  返回以后缀名字典序排序的特征库List
+	 */
 	private List sortFileTypeMap() {
 		List<Map.Entry<String, String>> sortMap = new ArrayList<>(fileTypeMap.entrySet());
 		sortMap.sort(Comparator.comparing(Map.Entry::getValue));
 		return sortMap;
 	}
 	
+	/**
+	 * 输出当前文件特征库
+	 * @return 一个包含换行的全部特征库String
+	 */
 	String printFileTypeMap() {
 		StringBuilder sb = new StringBuilder();
 		sortFileTypeMap().forEach(item -> sb.append(item).append("\n"));
@@ -45,7 +62,11 @@ class FileType {
 		return sb.toString();
 	}
 	
-	
+	/**
+	 * 将文件字节转化为16进制文本的字符串
+	 * @param src 字节组
+	 * @return 该字节组16进制表示形式的字符串
+	 */
 	private String bytesToHexString(byte[] src) {
 		StringBuilder stringBuilder = new StringBuilder();
 		if (src == null || src.length <= 0) {
@@ -62,6 +83,11 @@ class FileType {
 		return stringBuilder.toString();
 	}
 	
+	/**
+	 * 获取该文件前十个字节的16进制表示形式字符串
+	 * @param filePath 文件路径
+	 * @return 该文件前十个字节的数据的16进制表示的字符串
+	 */
 	String getFileCode(String filePath) {
 		String fileCode;
 		try {
@@ -77,6 +103,11 @@ class FileType {
 		return fileCode;
 	}
 	
+	/**
+	 * 在Map中匹配文件特征，并返回文件类型
+	 * @param filePath 该文件的路径
+	 * @return 若匹配成功，返回Map中的文件类型，若匹配失败，返回 null
+	 */
 	String getFileType(String filePath) {
 		String res = null;
 		String fileCode = getFileCode(filePath);
@@ -91,6 +122,11 @@ class FileType {
 		return res != null ? res.toLowerCase() : null;
 	}
 	
+	/**
+	 * 统计文件类型在特征库中的特征数量
+	 * @param type 文件类型
+	 * @return 特征库中该文件类型特征的数量
+	 */
 	int getTypeCount(String type) {
 		int count = 0;
 		for (String temp : fileTypeMap.values()) {
