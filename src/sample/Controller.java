@@ -1,8 +1,11 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
@@ -25,9 +28,13 @@ public class Controller {
 	@FXML
 	private TextField filePath;
 	
+	@FXML
+	private Label UICount;
+	
 	
 	@FXML
 	private void getFileType() {
+		UICount.setVisible(false);
 		String path = filePath.getText();
 		File temp = new File(path);
 		if (temp.isDirectory()) console.setText("该路径为文件夹，不存在后缀名");
@@ -38,17 +45,19 @@ public class Controller {
 		}
 	}
 	
-	private int fileCount = 0;
+	private StringProperty CountProp = new SimpleStringProperty("Count: 0");
+	private int count;
 	
 	@FXML
 	void learnThePath() {
+		UICount.setVisible(true);
 		new Thread() {
 			private MachineLearning ml = new MachineLearning();
-			
 			@Override
 			public void run() {
 				ml.learnCount = 0;
-				fileCount = 0;
+				count = 0;
+				CountProp.setValue("Count: " + count);
 				Platform.runLater(() -> console.setText(""));
 				String path = filePath.getText();
 				File temp = new File(path);
@@ -59,7 +68,7 @@ public class Controller {
 				} else {
 					dfsLearn(temp);
 					Platform.runLater(() -> console.appendText("\n========================\n" +
-							"扫描共计" + fileCount + "个文件\n" +
+							"扫描共计" + CountProp.getValue() + "个文件\n" +
 							"成功学习共计" + ml.learnCount + "种文件特征"));
 				}
 				try {
@@ -77,8 +86,11 @@ public class Controller {
 				if (file.isDirectory()) {
 					Arrays.stream(file.listFiles()).map(this::dfsLearn).forEach(fileList::addAll);
 				} else {
-					fileCount++;
-					Platform.runLater(() -> console.appendText(ml.learnFile(file)));
+					if(count % 500 == 0) Platform.runLater(() -> console.setText("")); //数据量大时清空
+					Platform.runLater(() -> {
+						console.appendText(ml.learnFile(file));
+						CountProp.setValue("Count: " + ++count);
+					});
 					try{
 						Thread.sleep(5);
 					}catch (Exception e){}
@@ -92,6 +104,8 @@ public class Controller {
 	
 	@FXML
 	private void printMap() {
+		UICount.setVisible(true);
+		CountProp.setValue("Count: " + FileType.fileTypeMap.size());
 		console.setText(fileType.printFileTypeMap());
 		console.appendText("========================\n" +
 				"文件特征库共计 " + FileType.fileTypeMap.size() + " 条特征\n"
@@ -128,7 +142,7 @@ public class Controller {
 		console.textProperty().addListener(
 				(ChangeListener<Object>) (observableValue, oldValue, newValue)
 						-> console.setScrollTop(Double.MAX_VALUE));
-		
+		UICount.textProperty().bind(CountProp);
 		console.appendText("Welcome to FileTypeGetter\n" +
 				"Made by Lunzi 2017.8\n\n" +
 				"拖拽文件进入窗口即可填充路径\n" +

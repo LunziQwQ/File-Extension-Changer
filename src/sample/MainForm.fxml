@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -25,11 +27,11 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="filePath" onDragEntered="#getFilePath" prefHeight="27.0" prefWidth="424.0" promptText="请输入文件路径或拖拽文件至此">
+            <TextField fx:id="filePath" onDragEntered="#getFilePath" prefHeight="30.0" prefWidth="400.0" promptText="请输入文件路径或拖拽文件至此">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding></TextField>
-            <MenuButton alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="18.0" prefWidth="89.0" text="Run it" textAlignment="CENTER">
+            <MenuButton alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" text="Run it" textAlignment="CENTER">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#getFileType" text="识别文件类型" />
                 <MenuItem mnemonicParsing="false" onAction="#learnThePath" text="学习文件类型" />
@@ -37,8 +39,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#openTheMapFile" text="编辑类型库" />
               </items>
                <font>
-                  <Font name="Microsoft YaHei Bold" size="12.0" />
+                  <Font name="Microsoft YaHei Bold" size="14.0" />
                </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </MenuButton>
         </items>
       </ToolBar>
@@ -49,5 +54,13 @@
          <padding>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding></TextArea>
+      <Label fx:id="UICount" alignment="BOTTOM_LEFT" text="Count: " textAlignment="CENTER" textFill="GREENYELLOW" visible="false" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="265.0" left="500.0" />
+         </GridPane.margin>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
    </children>
 </GridPane>
