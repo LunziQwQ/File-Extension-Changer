@@ -19,6 +19,7 @@ class FileType {
 	 * @throws IOException
 	 */
 	void loadFileTypeMap() throws IOException {
+		fileTypeMap.clear();
 		File file = new File(Config.FILE_TYPE_DATA_PATH);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String temp;
@@ -35,7 +36,7 @@ class FileType {
 	void saveFileTypeMap() throws IOException {
 		File file = new File(Config.FILE_TYPE_DATA_PATH);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		for (Object o : sortFileTypeMap()) {
+		for (Object o : sortFileTypeMap(true)) {
 			bw.write(o + "\n");
 		}
 		bw.close();         //关闭流防止后续文件操作占用
@@ -43,13 +44,16 @@ class FileType {
 	
 	/**
 	 * 将Map转为List并排序
-	 * @return  返回以后缀名字典序排序的特征库List
+	 *
+	 * @param byValue 排序依据，true->value false->key
+	 * @return 返回以后缀名字典序排序的特征库List
 	 */
-	private List sortFileTypeMap() {
+	List<Map.Entry<String, String>> sortFileTypeMap(boolean byValue) {
 		List<Map.Entry<String, String>> sortMap = new ArrayList<>(fileTypeMap.entrySet());
-		sortMap.sort(Comparator.comparing(Map.Entry::getValue));
+		sortMap.sort(Comparator.comparing(byValue ? Map.Entry::getValue : Map.Entry::getKey));
 		return sortMap;
 	}
+	
 	
 	/**
 	 * 输出当前文件特征库
@@ -57,8 +61,7 @@ class FileType {
 	 */
 	String printFileTypeMap() {
 		StringBuilder sb = new StringBuilder();
-		sortFileTypeMap().forEach(item -> sb.append(item).append("\n"));
-		System.out.println(sb.toString());
+		sortFileTypeMap(true).forEach(item -> sb.append(item).append("\n"));
 		return sb.toString();
 	}
 	
@@ -118,7 +121,6 @@ class FileType {
 				break;
 			}
 		}
-		System.out.println(fileCode + "=" + res);
 		return res != null ? res.toLowerCase() : null;
 	}
 	

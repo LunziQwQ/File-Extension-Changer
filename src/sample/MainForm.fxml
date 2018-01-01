@@ -56,7 +56,7 @@
          </padding></TextArea>
       <Label fx:id="UICount" alignment="BOTTOM_LEFT" text="Count: " textAlignment="CENTER" textFill="GREENYELLOW" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets bottom="265.0" left="500.0" />
+            <Insets bottom="265.0" left="495.0" />
          </GridPane.margin>
          <font>
             <Font name="System Bold" size="12.0" />

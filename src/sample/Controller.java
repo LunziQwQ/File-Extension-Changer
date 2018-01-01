@@ -41,7 +41,7 @@ public class Controller {
 		else if (!temp.exists()) console.setText("该路径不存在，请检查是否输入正确");
 		else {
 			String res = fileType.getFileType(path);
-			console.setText(res != null ? "该文件的类型可能为： " + res : "未能成功获取文件类型");
+			console.setText(res != null ? "该文件的类型可能为： " + res.replace(","," (or) ") : "未能成功获取文件类型");
 		}
 	}
 	
@@ -67,9 +67,11 @@ public class Controller {
 					Platform.runLater(() -> console.appendText(ml.learnFile(temp)));
 				} else {
 					dfsLearn(temp);
+					int mergeCount = ml.mergeTypeMap();
 					Platform.runLater(() -> console.appendText("\n========================\n" +
 							"扫描共计" + CountProp.getValue() + "个文件\n" +
-							"成功学习共计" + ml.learnCount + "种文件特征"));
+							"成功学习共计" + ml.learnCount + "条文件特征\n" +
+							"智能合并共计" + mergeCount + "条文件特征"));
 				}
 				try {
 					fileType.saveFileTypeMap();
