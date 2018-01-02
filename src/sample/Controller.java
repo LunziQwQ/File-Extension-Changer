@@ -16,10 +16,8 @@ import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 
 public class Controller {
@@ -72,6 +70,7 @@ public class Controller {
 					Platform.runLater(() -> console.setText("该路径不存在，请检查是否输入正确"));
 				} else if (!temp.isDirectory()) {
 					Platform.runLater(() -> console.appendText(ml.learnFile(temp)));
+					CountProp.setValue("Count: 1");
 				} else {
 					dfsLearn(temp);
 					int mergeCount = ml.mergeTypeMap();
@@ -94,7 +93,7 @@ public class Controller {
 				List<File> fileList = new ArrayList<>();
 				
 				if (file.isDirectory()) {
-					Arrays.stream(file.listFiles()).map(this::dfsLearn).forEach(fileList::addAll);
+					Arrays.stream(Objects.requireNonNull(file.listFiles())).map(this::dfsLearn).forEach(fileList::addAll);
 				} else {
 					if(count % 500 == 0) Platform.runLater(() -> console.setText("")); //数据量大时清空
 					Platform.runLater(() -> {
@@ -103,7 +102,9 @@ public class Controller {
 					});
 					try{
 						Thread.sleep(5);
-					}catch (Exception e){}
+					}catch (Exception e){
+						e.printStackTrace();
+					}
 				}
 				return fileList;
 			}
@@ -193,7 +194,7 @@ public class Controller {
 	
 	private byte[] readInputStream(InputStream is) throws IOException {
 		byte[] buffer = new byte[1024];
-		int size = -1;
+		int size;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		while ((size = is.read(buffer)) != -1) {
 			bos.write(buffer, 0, size);
