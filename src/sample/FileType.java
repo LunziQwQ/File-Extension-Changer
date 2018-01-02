@@ -12,7 +12,7 @@ import java.util.*;
  */
 class FileType {
 	//文件类型特征库
-	static Map<String, String> fileTypeMap = new HashMap<>();
+	static volatile Map<String, String> fileTypeMap = new HashMap<>();
 	
 	/**
 	 * 从附带的数据文件加载文件特征库
@@ -132,7 +132,7 @@ class FileType {
 	int getTypeCount(String type) {
 		int count = 0;
 		for (String temp : fileTypeMap.values()) {
-			if (temp.equals(type)) count++;
+			if (temp.contains(type)) count++;
 		}
 		return count;
 	}

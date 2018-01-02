@@ -37,17 +37,30 @@ class MachineLearning {
 		res += fileCode + " = " + extName;
 		String getType = fileType.getFileType(file.getAbsolutePath());
 		if (getType == null || !getType.contains(extName)) {
-			boolean getNewItem = addItemToMap(fileCode, extName);
+			boolean getNewItem = (getType == null ? addItemToMap(fileCode, extName) : mergeTypeToFileCode(fileCode, extName));
+			
 			res += getNewItem ? "  --> 学习成功" : "";
 			learnCount += getNewItem ? 1 : 0;
-			System.out.print(res);
+			System.out.print("filePath: " + file.getAbsolutePath() + "ext: " + extName + "\nfileCode: " + fileCode + "\n" + res + "\n");
 		}
 		return res;
 	}
 	
 	
-	private boolean addItemToMap(String src, String extName) {
-		return fileType.getTypeCount(extName) < 30 && FileType.fileTypeMap.put(src, extName) != null;
+	private boolean addItemToMap(String fileCode, String type) {
+		return fileType.getTypeCount(type) < 30 && FileType.fileTypeMap.put(fileCode, type) == null;
+	}
+	
+	private boolean mergeTypeToFileCode(String fileCode, String type) {
+		for (String key : FileType.fileTypeMap.keySet()) {
+			if (key.toLowerCase().startsWith(fileCode.toLowerCase()) ||
+					fileCode.toLowerCase().startsWith(key.toLowerCase())) {
+				String newValue = FileType.fileTypeMap.get(key) + "," + type;
+				FileType.fileTypeMap.put(fileCode, newValue);
+				break;
+			}
+		}
+		return true;
 	}
 	
 	/**

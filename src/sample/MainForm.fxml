@@ -31,12 +31,13 @@
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding></TextField>
-            <MenuButton alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" text="Run it" textAlignment="CENTER">
+            <MenuButton fx:id="menuButton" alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" text="Run it" textAlignment="CENTER">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#getFileType" text="识别文件类型" />
                 <MenuItem mnemonicParsing="false" onAction="#learnThePath" text="学习文件类型" />
                   <MenuItem mnemonicParsing="false" onAction="#printMap" text="输出类型库" />
                   <MenuItem mnemonicParsing="false" onAction="#openTheMapFile" text="编辑类型库" />
+                  <MenuItem mnemonicParsing="false" onAction="#downloadFileTypeMap" text="下载最新类型库" />
               </items>
                <font>
                   <Font name="Microsoft YaHei Bold" size="14.0" />

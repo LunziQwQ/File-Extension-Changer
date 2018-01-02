@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -12,11 +13,13 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 public class Controller {
@@ -30,6 +33,9 @@ public class Controller {
 	
 	@FXML
 	private Label UICount;
+	
+	@FXML
+	private MenuButton menuButton;
 	
 	
 	@FXML
@@ -55,6 +61,7 @@ public class Controller {
 			private MachineLearning ml = new MachineLearning();
 			@Override
 			public void run() {
+				menuButton.setDisable(true);
 				ml.learnCount = 0;
 				count = 0;
 				CountProp.setValue("Count: " + count);
@@ -80,6 +87,7 @@ public class Controller {
 					console.appendText("\n文件类型数据存储失败");
 					ioe.printStackTrace();
 				}
+				menuButton.setDisable(false);
 			}
 			
 			private List<File> dfsLearn(File file) {
@@ -120,7 +128,8 @@ public class Controller {
 			Desktop.getDesktop().open(new File(Config.FILE_TYPE_DATA_PATH));
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			console.setText("文件类型库丢失或损坏");
+			console.appendText("文件类型库缺失，请点击Run it菜单，然后下载最新类型库。\n");
+			
 		}
 	}
 	
@@ -140,20 +149,76 @@ public class Controller {
 	}
 	
 	@FXML
+	boolean downloadFileTypeMap(){
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("下载特征库");
+		alert.setHeaderText("正在试图在线下载最新的文件特征库");
+		alert.setContentText("您是否要在线下载？（文件大小<10kB）\n");
+		Optional result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			try {
+				URL url = new URL("http://file.lunzi.pw/FileExtensionChanger/extNameData.txt");
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setConnectTimeout(5000);
+				
+				InputStream inputStream = connection.getInputStream();
+				
+				byte[] getData = readInputStream(inputStream);
+				
+				//文件保存位置
+				File file = new File("." + File.separator + "extNameData.txt");
+				FileOutputStream fos = new FileOutputStream(file);
+				fos.write(getData);
+				fos.close();
+				inputStream.close();
+				
+				console.setText(Config.WELCOME_TEXT + "文件特征库下载/更新成功\n");
+				fileType.loadFileTypeMap();
+				console.appendText("文件特征库加载成功\n");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				Alert warning = new Alert(Alert.AlertType.ERROR);
+				warning.setTitle("下载特征库");
+				warning.setHeaderText("文件类型库下载失败！");
+				warning.setContentText("请检查您的网络连接，若您的网络正常，可能是服务器资源出现问题，请反馈至邮箱me@lunzi.space。");
+				console.appendText("文件类型库下载失败，无法正常工作\n");
+			}
+			return true;
+		} else {
+			alert.close();
+			console.appendText("下载已取消\n");
+			return false;
+		}
+	}
+	
+	private byte[] readInputStream(InputStream is) throws IOException {
+		byte[] buffer = new byte[1024];
+		int size = -1;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		while ((size = is.read(buffer)) != -1) {
+			bos.write(buffer, 0, size);
+		}
+		bos.close();
+		is.close();
+		return bos.toByteArray();
+	}
+	
+	@FXML
 	public void initialize(){
 		console.textProperty().addListener(
 				(ChangeListener<Object>) (observableValue, oldValue, newValue)
 						-> console.setScrollTop(Double.MAX_VALUE));
 		UICount.textProperty().bind(CountProp);
-		console.appendText("Welcome to FileTypeGetter\n" +
-				"Made by Lunzi 2017.8\n\n" +
-				"拖拽文件进入窗口即可填充路径\n" +
-				"点击右下角的Run it 按钮选择功能\n\n");
+		console.appendText(Config.WELCOME_TEXT);
+		
 		try {
 			fileType.loadFileTypeMap();
+			console.appendText("文件类型库加载成功\n");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			console.appendText("文件类型库缺失或出错");
+			if(!downloadFileTypeMap()){
+				console.appendText("文件类型库缺失，无法正常工作，请点击Run it菜单，然后下载最新类型库。\n");
+			}
 		}
 	}
 }
