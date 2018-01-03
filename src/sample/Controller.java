@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 
 import java.awt.*;
 import java.io.*;
@@ -69,8 +70,10 @@ public class Controller {
 			public void run() {
 				ml.learnCount = 0;
 				count = 0;
-				CountProp.setValue("Count: " + count);
-				Platform.runLater(() -> console.setText(""));
+				Platform.runLater(() -> {
+					console.setText("");
+					CountProp.setValue("Count: " + count);
+				});
 				String path = filePath.getText();
 				File temp = new File(path);
 				if (!temp.exists()) {
@@ -79,8 +82,10 @@ public class Controller {
 					return;
 				} else if (!temp.isDirectory()) {
 					UI_doLearning();
-					Platform.runLater(() -> console.appendText(ml.learnFile(temp)));
-					CountProp.setValue("Count: 1");
+					Platform.runLater(() -> {
+						console.appendText(ml.learnFile(temp));
+						CountProp.setValue("Count: 1");
+					});
 					UI_finishLearning();
 				} else {
 					dfsGetList(temp);
@@ -164,6 +169,11 @@ public class Controller {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@FXML
+	private void dragOver(DragEvent event) {
+		event.acceptTransferModes(TransferMode.COPY);
 	}
 	
 	@FXML

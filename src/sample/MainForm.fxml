@@ -5,70 +5,72 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints />
-      <RowConstraints maxHeight="400.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-  </rowConstraints>
-   <children>
-      <ToolBar prefHeight="45.0" prefWidth="750.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-        <items>
-            <Label fx:id="label" prefHeight="29.0" prefWidth="67.0" text="文件路径">
-               <font>
-                  <Font name="Microsoft YaHei" size="14.0" />
-               </font>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </Label>
-            <StackPane prefHeight="45.0" prefWidth="400.0">
-               <children>
-                  <ProgressBar fx:id="progressBar" prefWidth="400.0" />
-                  <TextField fx:id="filePath" onDragEntered="#getFilePath" prefHeight="30.0" prefWidth="400.0" promptText="请输入文件路径或拖拽文件至此">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </TextField>
-               </children>
-               <padding>
-                  <Insets right="5.0" />
-               </padding>
-            </StackPane>
-            <MenuButton fx:id="menuButton" alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" text="Run it" textAlignment="CENTER">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#getFileType" text="识别文件类型" />
-                <MenuItem mnemonicParsing="false" onAction="#learnThePath" text="学习文件类型" />
-                  <MenuItem mnemonicParsing="false" onAction="#printMap" text="输出类型库" />
-                  <MenuItem mnemonicParsing="false" onAction="#openTheMapFile" text="编辑类型库" />
-                  <MenuItem mnemonicParsing="false" onAction="#downloadFileTypeMap" text="下载最新类型库" />
-              </items>
-               <font>
-                  <Font name="Microsoft YaHei Bold" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </MenuButton>
-        </items>
-      </ToolBar>
-      <TextArea fx:id="console" editable="false" onDragEntered="#getFilePath" prefHeight="300.0" prefWidth="600.0" stylesheets="@MainForm.css" wrapText="true" GridPane.rowIndex="1">
-         <font>
-            <Font name="Consolas" size="18.0" />
-         </font>
-         <padding>
-            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-         </padding></TextArea>
-      <Label fx:id="UICount" alignment="BOTTOM_LEFT" text="Count: " textAlignment="CENTER" textFill="GREENYELLOW" visible="false" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="265.0" left="495.0" />
-         </GridPane.margin>
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-   </children>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0"
+          prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="sample.Controller">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints maxHeight="400.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <ToolBar prefHeight="45.0" prefWidth="750.0" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+             GridPane.valignment="CENTER">
+        <Label fx:id="label" prefHeight="29.0" prefWidth="67.0" text="文件路径">
+            <font>
+                <Font name="Microsoft YaHei" size="14.0"/>
+            </font>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </Label>
+        <StackPane prefHeight="45.0" prefWidth="400.0">
+            <padding>
+                <Insets right="5.0"/>
+            </padding>
+            <ProgressBar fx:id="progressBar" prefWidth="400.0"/>
+            <TextField fx:id="filePath" onDragDropped="#getFilePath" onDragOver="#dragOver" prefHeight="30.0"
+                       prefWidth="400.0" promptText="请输入文件路径或拖拽文件至此">
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                </padding>
+            </TextField>
+        </StackPane>
+        <MenuButton fx:id="menuButton" alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="30.0"
+                    prefWidth="95.0" text="Run it" textAlignment="CENTER">
+            <items>
+                <MenuItem mnemonicParsing="false" onAction="#getFileType" text="识别文件类型"/>
+                <MenuItem mnemonicParsing="false" onAction="#learnThePath" text="学习文件类型"/>
+                <MenuItem mnemonicParsing="false" onAction="#printMap" text="输出类型库"/>
+                <MenuItem mnemonicParsing="false" onAction="#openTheMapFile" text="编辑类型库"/>
+                <MenuItem mnemonicParsing="false" onAction="#downloadFileTypeMap" text="下载最新类型库"/>
+            </items>
+            <font>
+                <Font name="Microsoft YaHei Bold" size="14.0"/>
+            </font>
+            <opaqueInsets>
+                <Insets/>
+            </opaqueInsets>
+        </MenuButton>
+    </ToolBar>
+    <TextArea fx:id="console" editable="false" onDragDropped="#getFilePath" onDragOver="#dragOver" prefHeight="300.0"
+              prefWidth="600.0" stylesheets="@MainForm.css" wrapText="true" GridPane.rowIndex="1">
+        <font>
+          <Font name="Consolas" size="18.0"/>
+        </font>
+        <padding>
+          <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+        </padding>
+    </TextArea>
+    <Label fx:id="UICount" alignment="BOTTOM_LEFT" text="Count: " textAlignment="CENTER" textFill="GREENYELLOW"
+           visible="false" GridPane.rowIndex="1">
+        <GridPane.margin>
+          <Insets bottom="265.0" left="495.0"/>
+        </GridPane.margin>
+        <font>
+          <Font name="System Bold" size="12.0"/>
+        </font>
+    </Label>
 </GridPane>
