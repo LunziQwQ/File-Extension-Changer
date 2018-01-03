@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -17,9 +15,9 @@
       <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ToolBar prefHeight="47.0" prefWidth="600.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <ToolBar prefHeight="45.0" prefWidth="750.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
         <items>
-            <Label prefHeight="29.0" prefWidth="67.0" text="文件路径">
+            <Label fx:id="label" prefHeight="29.0" prefWidth="67.0" text="文件路径">
                <font>
                   <Font name="Microsoft YaHei" size="14.0" />
                </font>
@@ -27,10 +25,19 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Label>
-            <TextField fx:id="filePath" onDragEntered="#getFilePath" prefHeight="30.0" prefWidth="400.0" promptText="请输入文件路径或拖拽文件至此">
+            <StackPane prefHeight="45.0" prefWidth="400.0">
+               <children>
+                  <ProgressBar fx:id="progressBar" prefWidth="400.0" />
+                  <TextField fx:id="filePath" onDragEntered="#getFilePath" prefHeight="30.0" prefWidth="400.0" promptText="请输入文件路径或拖拽文件至此">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </TextField>
+               </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding></TextField>
+                  <Insets right="5.0" />
+               </padding>
+            </StackPane>
             <MenuButton fx:id="menuButton" alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" text="Run it" textAlignment="CENTER">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#getFileType" text="识别文件类型" />

@@ -33,12 +33,18 @@ public class Controller {
 	private Label UICount;
 	
 	@FXML
+	private Label label;
+	
+	@FXML
 	private MenuButton menuButton;
+	
+	@FXML
+	private ProgressBar progressBar;
 	
 	
 	@FXML
 	private void getFileType() {
-		UICount.setVisible(false);
+		UI_getType();
 		String path = filePath.getText();
 		File temp = new File(path);
 		if (temp.isDirectory()) console.setText("该路径为文件夹，不存在后缀名");
@@ -54,12 +60,13 @@ public class Controller {
 	
 	@FXML
 	void learnThePath() {
-		UICount.setVisible(true);
+		UI_startLearning();
 		new Thread() {
 			private MachineLearning ml = new MachineLearning();
+			private List<File> fileList = new ArrayList<>();
+			
 			@Override
 			public void run() {
-				menuButton.setDisable(true);
 				ml.learnCount = 0;
 				count = 0;
 				CountProp.setValue("Count: " + count);
@@ -68,16 +75,36 @@ public class Controller {
 				File temp = new File(path);
 				if (!temp.exists()) {
 					Platform.runLater(() -> console.setText("该路径不存在，请检查是否输入正确"));
+					UI_finishLearning();
+					return;
 				} else if (!temp.isDirectory()) {
+					UI_doLearning();
 					Platform.runLater(() -> console.appendText(ml.learnFile(temp)));
 					CountProp.setValue("Count: 1");
+					UI_finishLearning();
 				} else {
-					dfsLearn(temp);
+					dfsGetList(temp);
+					int size = fileList.size();
+					UI_doLearning();
+					fileList.forEach(x -> {
+						Platform.runLater(() -> {
+							if (count % 500 == 0) Platform.runLater(() -> console.setText("")); //数据量大时清空
+							console.appendText(ml.learnFile(x));
+							CountProp.setValue("Count: " + ++count);
+							progressBar.setProgress((double) count / size);
+						});
+						try{
+							Thread.sleep(5);
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+					});
 					int mergeCount = ml.mergeTypeMap();
 					Platform.runLater(() -> console.appendText("\n========================\n" +
 							"扫描共计" + CountProp.getValue() + "个文件\n" +
 							"成功学习共计" + ml.learnCount + "条文件特征\n" +
 							"智能合并共计" + mergeCount + "条文件特征"));
+					UI_finishLearning();
 				}
 				try {
 					fileType.saveFileTypeMap();
@@ -86,36 +113,25 @@ public class Controller {
 					console.appendText("\n文件类型数据存储失败");
 					ioe.printStackTrace();
 				}
-				menuButton.setDisable(false);
 			}
 			
-			private List<File> dfsLearn(File file) {
-				List<File> fileList = new ArrayList<>();
-				
+			private void dfsGetList(File file) {
 				if (file.isDirectory()) {
-					Arrays.stream(Objects.requireNonNull(file.listFiles())).map(this::dfsLearn).forEach(fileList::addAll);
-				} else {
-					if(count % 500 == 0) Platform.runLater(() -> console.setText("")); //数据量大时清空
-					Platform.runLater(() -> {
-						console.appendText(ml.learnFile(file));
-						CountProp.setValue("Count: " + ++count);
+					Arrays.stream(Objects.requireNonNull(file.listFiles())).forEach(x -> {
+						if (x.isDirectory())
+							dfsGetList(x);
+						else
+							fileList.add(x);
 					});
-					try{
-						Thread.sleep(5);
-					}catch (Exception e){
-						e.printStackTrace();
-					}
 				}
-				return fileList;
 			}
 		}.start();
 	}
 	
 	
-	
 	@FXML
 	private void printMap() {
-		UICount.setVisible(true);
+		UI_pringMap();
 		CountProp.setValue("Count: " + FileType.fileTypeMap.size());
 		console.setText(fileType.printFileTypeMap());
 		console.appendText("========================\n" +
@@ -136,6 +152,7 @@ public class Controller {
 	
 	@FXML
 	private void getFilePath(DragEvent event) {
+		UI_reset();
 		Dragboard db = event.getDragboard();
 		if (db.hasFiles()) {
 			try {
@@ -151,6 +168,7 @@ public class Controller {
 	
 	@FXML
 	boolean downloadFileTypeMap(){
+		UI_reset();
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setTitle("下载特征库");
 		alert.setHeaderText("正在试图在线下载最新的文件特征库");
@@ -221,5 +239,45 @@ public class Controller {
 				console.appendText("文件类型库缺失，无法正常工作，请点击Run it菜单，然后下载最新类型库。\n");
 			}
 		}
+	}
+	
+	private void UI_getType(){
+		UI_reset();
+	}
+	
+	private void UI_pringMap() {
+		UI_reset();
+		Platform.runLater(() -> UICount.setVisible(true));
+	}
+	
+	private void UI_reset(){
+		Platform.runLater(()->{
+			UICount.setVisible(false);
+			filePath.setVisible(true);
+			menuButton.setDisable(false);
+			label.setText("文件路径");
+			progressBar.setProgress(-1);
+		});
+	}
+	
+	private void UI_startLearning(){
+		Platform.runLater(()->{
+			UICount.setVisible(true);
+			label.setText("开始学习");
+			filePath.setVisible(false);
+			menuButton.setDisable(true);
+		});
+	}
+	
+	private void UI_doLearning(){
+		Platform.runLater(() -> label.setText("正在学习"));
+	}
+	
+	private void UI_finishLearning(){
+		Platform.runLater(()->{
+			menuButton.setDisable(false);
+			progressBar.setProgress(1);
+			label.setText("完成学习");
+		});
 	}
 }

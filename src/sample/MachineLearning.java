@@ -70,23 +70,29 @@ class MachineLearning {
 	int mergeTypeMap(){
 		List<Map.Entry<String, String>> sortMap = fileType.sortFileTypeMap(false);
 		int mergeItemCount = 0;
+		int tempCount = 5;
 		int mapSize = sortMap.size();
-		for (int i = 0; i < mapSize - 1; i++) {
-			String prefix = getLCP(sortMap.get(i).getKey(), sortMap.get(i + 1).getKey());
-			if (prefix.length() >= 6) {
-				//merge items
-				String mergeValue = mergeValues(sortMap.get(i).getValue(), sortMap.get(i + 1).getValue());
-				sortMap.set(i, new AbstractMap.SimpleEntry<String, String>(prefix, mergeValue));
-				
-				//delete old items
-				sortMap.remove(i + 1);
-				
-				//change length to make loop right
-				mapSize--;
-				i--;
-				
-				mergeItemCount++;
+		//反复合并效果至可合并项目不超过5个
+		while (tempCount >= 5) {
+			tempCount = 0;
+			for (int i = 0; i < mapSize - 1; i++) {
+				String prefix = getLCP(sortMap.get(i).getKey(), sortMap.get(i + 1).getKey());
+				if (prefix.length() >= 6) {
+					//merge items
+					String mergeValue = mergeValues(sortMap.get(i).getValue(), sortMap.get(i + 1).getValue());
+					sortMap.set(i, new AbstractMap.SimpleEntry<>(prefix, mergeValue));
+					
+					//delete old items
+					sortMap.remove(i + 1);
+					
+					//change length to make loop right
+					mapSize--;
+					i--;
+					
+					tempCount++;
+				}
 			}
+			mergeItemCount += tempCount;
 		}
 		
 		//update map
